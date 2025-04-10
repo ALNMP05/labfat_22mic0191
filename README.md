@@ -1,1 +1,55 @@
-# labfat_22mic0191
+name: CI/CD Pipeline for Python Web App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Test Application
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code from the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python environment
+      - name: Set up Python Environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # Step 3: Cache pip dependencies
+      - name: Cache Python Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Step 4: Install dependencies
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 5: Linting (Optional but Recommended)
+      - name: Lint Code with flake8
+        run: |
+          pip install flake8
+          flake8 .
+
+      # Step 6: Run Tests (Optional but Recommended)
+      - name: Run Unit Tests
+        run: |
+          pip install pytest
+          pytest
+
+      # Step 7: Build the application
+      - name: Build the Application
+        run: |
+          chmod +x build.sh
+          ./build.sh
