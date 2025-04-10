@@ -1,0 +1,17 @@
+name: Push Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Test on Push
+    runs-on: ubuntu-latest
+
+    steps:
+      
+        uses: actions/checkout@v3
+
+     
